@@ -57,9 +57,31 @@ function initDB() {
       id TEXT PRIMARY KEY,
       timestamp INTEGER NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS dependency_relationships (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      repository TEXT NOT NULL,
+      software_id TEXT NOT NULL,
+      depends_on_repository TEXT NOT NULL,
+      depends_on_software_id TEXT NOT NULL,
+      dependency_depth INTEGER NOT NULL,
+      UNIQUE(repository, software_id, depends_on_repository, depends_on_software_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS dependency_royalties (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      sale_id TEXT NOT NULL,
+      developer TEXT NOT NULL,
+      repository TEXT NOT NULL,
+      software_id TEXT NOT NULL,
+      amount TEXT NOT NULL,
+      depth INTEGER NOT NULL,
+      rate REAL NOT NULL,
+      FOREIGN KEY(sale_id) REFERENCES sales(id)
+    );
   `);
 
-  console.log('Database initialized');
+  console.log('Database initialized with dependency tracking tables');
 }
 
 // Check if event has been processed
@@ -236,78 +258,29 @@ function calculateRoyalties() {
   console.log('Calculating royalties for unprocessed sales...');
 
   try {
-    // Get latest royalty parameters
-    const paramsStmt = db.prepare(`
-      SELECT initial_rate, decay_factor, decay_period
-      FROM royalty_parameters
-      ORDER BY timestamp DESC LIMIT 1
-    `);
-
-    let params = { initialRate: 10, decayFactor: 95, decayPeriod: 30 * 24 * 60 * 60 };
-    const latestParams = paramsStmt.get();
-
-    if (latestParams) {
-      params = {
-        initialRate: parseInt(latestParams.initial_rate),
-        decayFactor: parseInt(latestParams.decay_factor),
-        decayPeriod: parseInt(latestParams.decay_period)
-      };
-    }
-
     // Get unprocessed sales
     const salesStmt = db.prepare(`
-      SELECT s.id, s.repository, s.software_id, s.price, s.timestamp, s.developer,
-             p.publish_time
+      SELECT s.id, s.repository, s.software_id, s.price
       FROM sales s
-      JOIN software_publications p ON s.repository = p.repository AND s.software_id = p.software_id
       WHERE s.processed = 0
     `);
 
     const unprocessedSales = salesStmt.all();
     console.log(`Found ${unprocessedSales.length} unprocessed sales`);
 
-    // Process each sale
-    const updateSaleStmt = db.prepare(`
-      UPDATE sales
-      SET processed = 1, royalty_amount = ?
-      WHERE id = ?
-    `);
-
-    const updateRoyaltyStmt = db.prepare(`
-      INSERT INTO pending_royalties (developer, amount, last_updated)
-      VALUES (?, ?, ?)
-      ON CONFLICT(developer) DO UPDATE SET
-      amount = amount + excluded.amount,
-      last_updated = excluded.last_updated
-    `);
-
-    // Use a transaction for atomicity
-    const processSales = db.transaction(() => {
-      for (const sale of unprocessedSales) {
-        // Calculate royalty
-        const royaltyAmount = calculateRoyalty(
-          sale.price,
-          parseInt(sale.publish_time),
-          parseInt(sale.timestamp),
-          params
-        );
-
-        console.log(`Calculated royalty for sale ${sale.id}: ${ethers.utils.formatEther(royaltyAmount)} ETH`);
-
-        // Update sale record
-        updateSaleStmt.run(royaltyAmount, sale.id);
-
-        // Update pending royalties
-        updateRoyaltyStmt.run(
-          sale.developer,
-          royaltyAmount,
-          Math.floor(Date.now() / 1000)
-        );
-      }
-    });
-
-    processSales();
-    console.log('Royalty calculations completed');
+    // Process each sale with dependency-based royalties
+    for (const sale of unprocessedSales) {
+      calculateDependencyRoyalties(
+        sale.id,
+        sale.repository,
+        parseInt(sale.software_id),
+        sale.price
+      ).then((result) => {
+        console.log(`Processed royalties for sale ${sale.id}: ${ethers.utils.formatEther(result.totalRoyalty)} ETH distributed to ${result.depCount + 1} developers`);
+      }).catch(error => {
+        console.error(`Error processing sale ${sale.id}:`, error);
+      });
+    }
   } catch (error) {
     console.error('Error calculating royalties:', error);
   }
@@ -365,7 +338,56 @@ function startServer() {
 
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(params || { initialRate: 10, decayFactor: 95, decayPeriod: 30 * 24 * 60 * 60 }));
-      }else if (req.url === '/') {
+      } else if (req.url.startsWith('/api/dependencies/')) {
+        const [repo, softwareId] = req.url.substring('/api/dependencies/'.length).split('/');
+
+        if (!repo || !softwareId) {
+          res.statusCode = 400;
+          res.end('Bad Request: Need repository and software ID');
+          return;
+        }
+
+        // Get all dependencies with their developers and depths
+        const depStmt = db.prepare(`
+          SELECT
+            d.depends_on_repository,
+            d.depends_on_software_id,
+            MIN(d.dependency_depth) as depth,
+            p.developer
+          FROM dependency_relationships d
+          LEFT JOIN software_publications p ON d.depends_on_repository = p.repository AND d.depends_on_software_id = p.software_id
+          WHERE d.repository = ? AND d.software_id = ?
+          GROUP BY d.depends_on_repository, d.depends_on_software_id
+          ORDER BY depth ASC
+        `);
+
+        const dependencies = depStmt.all(repo, softwareId);
+
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({
+          repository: repo,
+          softwareId: softwareId,
+          dependencies: dependencies
+        }));
+      } else if (req.url.startsWith('/api/royaltytree/')) {
+        const saleId = req.url.substring('/api/royaltytree/'.length);
+
+        const royaltyStmt = db.prepare(`
+          SELECT
+            developer, repository, software_id, amount, depth, rate
+          FROM dependency_royalties
+          WHERE sale_id = ?
+          ORDER BY depth ASC
+        `);
+
+        const royalties = royaltyStmt.all(saleId);
+
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({
+          saleId: saleId,
+          royaltyDistribution: royalties
+        }));
+      } else if (req.url === '/') {
         res.setHeader('Content-Type', 'text/html');
         res.end(fs.readFileSync(path.join(__dirname, '../dashboard.html')));
       } else {
@@ -399,3 +421,246 @@ main().catch(error => {
   console.error('Error in indexer:', error);
   process.exit(1);
 });
+
+// Add these new functions to handle recursive dependency analysis
+
+// Function to analyze and store the complete dependency tree for a software
+async function analyzeDependencyTree(repository, softwareId, depth = 0, visitedNodes = new Set()) {
+  try {
+    // Create a unique ID for this software to prevent cycles
+    const nodeId = `${repository}-${softwareId}`;
+
+    // Skip if we've seen this node before (prevent infinite recursion)
+    if (visitedNodes.has(nodeId)) return;
+    visitedNodes.add(nodeId);
+
+    // Get contract instances
+    const Repository = await ethers.getContractFactory('Repository');
+    const repoInstance = await Repository.attach(repository);
+
+    // Get immediate dependencies of this software
+    const [dependencies, depTokenIds] = await repoInstance.getSoftwareDependencies(softwareId);
+
+    // No dependencies? We're done with this branch
+    if (dependencies.length === 0) return;
+
+    // Store dependency relationships in database
+    const insertDepStmt = db.prepare(`
+      INSERT OR IGNORE INTO dependency_relationships (
+        repository, software_id, depends_on_repository, depends_on_software_id, dependency_depth
+      ) VALUES (?, ?, ?, ?, ?)
+    `);
+
+    // For each direct dependency
+    for (let i = 0; i < dependencies.length; i++) {
+      const depRepo = dependencies[i];
+      for (let j = 0; j < depTokenIds[i].length; j++) {
+        const depTokenId = depTokenIds[i][j].toString();
+
+        // Store this direct dependency relationship
+        insertDepStmt.run(
+          repository,
+          softwareId.toString(),
+          depRepo,
+          depTokenId,
+          depth + 1  // Level 1 dependencies are depth 1
+        );
+
+        console.log(`Stored dependency: ${repository}-${softwareId} → ${depRepo}-${depTokenId} (depth ${depth + 1})`);
+
+        // Recursively analyze this dependency's dependencies
+        await analyzeDependencyTree(depRepo, depTokenId, depth + 1, visitedNodes);
+
+        // Now store indirect dependency relationships
+        const indirectDepsStmt = db.prepare(`
+          SELECT depends_on_repository, depends_on_software_id, dependency_depth
+          FROM dependency_relationships
+          WHERE repository = ? AND software_id = ?
+        `);
+
+        const indirectDeps = indirectDepsStmt.all(depRepo, depTokenId);
+
+        // For each indirect dependency, create a relationship from the original software
+        for (const indirect of indirectDeps) {
+          insertDepStmt.run(
+            repository,
+            softwareId.toString(),
+            indirect.depends_on_repository,
+            indirect.depends_on_software_id,
+            depth + 1 + indirect.dependency_depth // Adjust depth based on the chain
+          );
+
+          console.log(`Stored indirect dependency: ${repository}-${softwareId} → ${indirect.depends_on_repository}-${indirect.depends_on_software_id} (depth ${depth + 1 + indirect.dependency_depth})`);
+        }
+      }
+    }
+  } catch (error) {
+    console.error(`Error analyzing dependency tree for ${repository}-${softwareId}:`, error);
+  }
+}
+
+// Calculate royalties with decay based on dependency depth
+function calculateRoyaltyByDepth(price, depth, parameters) {
+  // Default parameters if none found
+  const {
+    initialRate = 10,    // Base royalty percentage for direct author
+    decayFactor = 65,    // How much to reduce royalty per depth level (35% reduction per level)
+    maxDepth = 5         // Maximum dependency depth to consider
+  } = parameters;
+
+  // Apply depth-based decay (depth 0 is the direct author)
+  let currentRate = initialRate;
+  for (let i = 0; i < Math.min(depth, maxDepth); i++) {
+    currentRate = (currentRate * decayFactor) / 100;
+  }
+
+  // Ensure minimum royalty of 0.1%
+  currentRate = Math.max(currentRate, 0.1);
+
+  // Calculate royalty amount (using BigNumber for precision)
+  const priceValue = ethers.BigNumber.from(price);
+  const royalty = priceValue.mul(Math.floor(currentRate * 100)).div(10000); // Convert percentage to basis points
+
+  return {
+    royaltyAmount: royalty,
+    rate: currentRate
+  };
+}
+
+// Calculate royalties for dependencies up to maxDepth
+async function calculateDependencyRoyalties(saleId, repository, softwareId, price) {
+  try {
+    // Get the latest royalty parameters
+    const paramsStmt = db.prepare(`
+      SELECT initial_rate, decay_factor, decay_period
+      FROM royalty_parameters
+      ORDER BY timestamp DESC LIMIT 1
+    `);
+
+    let params = {
+      initialRate: 10,
+      decayFactor: 65,  // 65% of previous level
+      maxDepth: 5
+    };
+
+    const latestParams = paramsStmt.get();
+    if (latestParams) {
+      params = {
+        initialRate: parseInt(latestParams.initial_rate),
+        decayFactor: parseInt(latestParams.decay_factor),
+        maxDepth: 5  // This could also come from parameters
+      };
+    }
+
+    // Make sure we have analyzed the dependency tree
+    await analyzeDependencyTree(repository, softwareId);
+
+    // Start with the primary author (depth 0)
+    const developerStmt = db.prepare(`
+      SELECT developer FROM software_publications
+      WHERE repository = ? AND software_id = ?
+    `);
+
+    const pubInfo = developerStmt.get(repository, softwareId.toString());
+    if (!pubInfo) {
+      throw new Error(`Publication info not found for ${repository}-${softwareId}`);
+    }
+
+    // Calculate primary author royalty
+    const primaryDeveloper = pubInfo.developer;
+    const primaryRoyaltyResult = calculateRoyaltyByDepth(price, 0, params);
+    let reservedAmount = primaryRoyaltyResult.royaltyAmount;
+
+    // Store this royalty in the database
+    const insertRoyaltyStmt = db.prepare(`
+      INSERT INTO dependency_royalties (
+        sale_id, developer, repository, software_id, amount, depth, rate
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    insertRoyaltyStmt.run(
+      saleId,
+      primaryDeveloper,
+      repository,
+      softwareId.toString(),
+      primaryRoyaltyResult.royaltyAmount.toString(),
+      0,
+      primaryRoyaltyResult.rate
+    );
+
+    // Update the pending royalties for the primary developer
+    updatePendingRoyalty(primaryDeveloper, primaryRoyaltyResult.royaltyAmount.toString());
+
+    // Get all dependencies with their depths
+    const depStmt = db.prepare(`
+      SELECT
+        depends_on_repository,
+        depends_on_software_id,
+        MIN(dependency_depth) as depth
+      FROM dependency_relationships
+      WHERE repository = ? AND software_id = ?
+      GROUP BY depends_on_repository, depends_on_software_id
+    `);
+
+    const dependencies = depStmt.all(repository, softwareId.toString());
+    console.log(`Found ${dependencies.length} dependencies for ${repository}-${softwareId}`);
+
+    // Calculate royalties for each dependency based on its depth
+    for (const dep of dependencies) {
+      // Get the developer of this dependency
+      const depInfo = developerStmt.get(dep.depends_on_repository, dep.depends_on_software_id);
+      if (!depInfo) continue;
+
+      const depDeveloper = depInfo.developer;
+      const depRoyaltyResult = calculateRoyaltyByDepth(price, dep.depth, params);
+
+      // Store this dependency royalty
+      insertRoyaltyStmt.run(
+        saleId,
+        depDeveloper,
+        dep.depends_on_repository,
+        dep.depends_on_software_id,
+        depRoyaltyResult.royaltyAmount.toString(),
+        dep.depth,
+        depRoyaltyResult.rate
+      );
+
+      // Update pending royalties for this dependency developer
+      updatePendingRoyalty(depDeveloper, depRoyaltyResult.royaltyAmount.toString());
+
+      // Add to the reserved amount
+      reservedAmount = reservedAmount.add(depRoyaltyResult.royaltyAmount);
+    }
+
+    // Update the sale record to show the total royalty amount
+    const updateSaleStmt = db.prepare(`
+      UPDATE sales
+      SET processed = 1, royalty_amount = ?
+      WHERE id = ?
+    `);
+
+    updateSaleStmt.run(reservedAmount.toString(), saleId);
+
+    return {
+      totalRoyalty: reservedAmount.toString(),
+      depCount: dependencies.length
+    };
+  } catch (error) {
+    console.error(`Error calculating dependency royalties:`, error);
+    throw error;
+  }
+}
+
+// Helper function to update pending royalties
+function updatePendingRoyalty(developer, amount) {
+  const updateStmt = db.prepare(`
+    INSERT INTO pending_royalties (developer, amount, last_updated)
+    VALUES (?, ?, ?)
+    ON CONFLICT(developer) DO UPDATE SET
+    amount = CAST(amount as DECIMAL) + CAST(? as DECIMAL),
+    last_updated = ?
+  `);
+
+  const now = Math.floor(Date.now() / 1000);
+  updateStmt.run(developer, amount, now, amount, now);
+}
