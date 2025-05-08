@@ -174,4 +174,84 @@ describe("Decentralized Marketplace", function () {
     console.log([address2, tokenId2]);
     expect(address2).to.include(dev1Repository);
   })
+  it("Should properly store and track royalties in RoyaltyManager", async function() {
+    // Get the RoyaltyManager from the Registry
+    const RoyaltyManager = await ethers.getContractFactory("RoyaltyManager");
+    const royaltyManagerAddress = await registry.getRoyaltyManager();
+    const royaltyManager = await RoyaltyManager.attach(royaltyManagerAddress);
+
+    console.log("RoyaltyManager address:", royaltyManagerAddress);
+
+    // Check initial pending royalties for dev2 (should have royalties from previous purchases)
+    const initialPendingRoyalties = await royaltyManager.getPendingRoyalties(dev2.address);
+    console.log("Dev2 initial pending royalties:", ethers.utils.formatEther(initialPendingRoyalties));
+
+    // Verify that dev2 has received royalties from previous purchases (2 ETH from buyer + 2 ETH from dev1)
+    expect(initialPendingRoyalties).to.equal(ethers.utils.parseEther("4"));
+
+    // Make another purchase from buyer to generate more royalties
+    const initialBuyerBalance = await ethers.provider.getBalance(buyer.address);
+
+    await marketplace.connect(buyer).buySoftware(dev2Repository, 1, {
+      value: ethers.utils.parseEther("2"),
+    });
+
+    // Check updated pending royalties for dev2
+    const updatedPendingRoyalties = await royaltyManager.getPendingRoyalties(dev2.address);
+    console.log("Dev2 updated pending royalties:", ethers.utils.formatEther(updatedPendingRoyalties));
+
+    // Should have 2 ETH more than before
+    expect(updatedPendingRoyalties).to.equal(
+      initialPendingRoyalties.add(ethers.utils.parseEther("2"))
+    );
+
+    // Get dev2's initial balance before withdrawal
+    const dev2BalanceBeforeWithdrawal = await ethers.provider.getBalance(dev2.address);
+
+    // Dev2 withdraws royalties
+    const withdrawTx = await royaltyManager.connect(dev2).withdrawRoyalties();
+    const withdrawReceipt = await withdrawTx.wait();
+
+    // Calculate gas cost
+    const gasCost = withdrawReceipt.gasUsed.mul(withdrawReceipt.effectiveGasPrice);
+
+    // Get dev2's balance after withdrawal
+    const dev2BalanceAfterWithdrawal = await ethers.provider.getBalance(dev2.address);
+
+    // Check that dev2 received the correct amount (minus gas costs)
+    const expectedBalance = dev2BalanceBeforeWithdrawal
+      .add(updatedPendingRoyalties)
+      .sub(gasCost);
+
+    console.log("Dev2 balance before withdrawal:", ethers.utils.formatEther(dev2BalanceBeforeWithdrawal));
+    console.log("Dev2 balance after withdrawal:", ethers.utils.formatEther(dev2BalanceAfterWithdrawal));
+    console.log("Gas cost for withdrawal:", ethers.utils.formatEther(gasCost));
+
+    expect(dev2BalanceAfterWithdrawal).to.equal(expectedBalance);
+
+    // Verify that pending royalties are now reset to 0
+    const royaltiesAfterWithdrawal = await royaltyManager.getPendingRoyalties(dev2.address);
+    expect(royaltiesAfterWithdrawal).to.equal(0);
+
+    // Verify that attempting to withdraw again fails
+    await expect(
+      royaltyManager.connect(dev2).withdrawRoyalties()
+    ).to.be.reverted; // Using the general "reverted" check instead
+
+    // Verify the events from the original purchases
+    const royaltyAddedEvents = await royaltyManager.queryFilter(
+      royaltyManager.filters.RoyaltyAdded(dev2.address)
+    );
+
+    console.log("Number of RoyaltyAdded events for dev2:", royaltyAddedEvents.length);
+    expect(royaltyAddedEvents.length).to.be.at.least(3); // Three purchases were made
+
+    // Verify the withdrawal event
+    const withdrawEvents = await royaltyManager.queryFilter(
+      royaltyManager.filters.RoyaltyWithdrawn(dev2.address)
+    );
+
+    expect(withdrawEvents.length).to.equal(1);
+    expect(withdrawEvents[0].args.amount).to.equal(updatedPendingRoyalties);
+  });
 });
