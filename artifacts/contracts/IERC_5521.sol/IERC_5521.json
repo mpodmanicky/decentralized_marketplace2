@@ -1,0 +1,178 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IERC_5521",
+  "sourceName": "contracts/IERC_5521.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "_address_referringList",
+          "type": "address[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[][]",
+          "name": "_tokenIds_referringList",
+          "type": "uint256[][]"
+        },
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "_address_referredList",
+          "type": "address[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[][]",
+          "name": "_tokenIds_referredList",
+          "type": "uint256[][]"
+        }
+      ],
+      "name": "UpdateNode",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "createdTimestampOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "referredOf",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[][]",
+          "name": "",
+          "type": "uint256[][]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "referringOf",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[][]",
+          "name": "",
+          "type": "uint256[][]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "addresses",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[][]",
+          "name": "tokenIds",
+          "type": "uint256[][]"
+        }
+      ],
+      "name": "setNode",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
