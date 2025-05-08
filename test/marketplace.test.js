@@ -76,15 +76,17 @@ describe("Decentralized Marketplace", function () {
     await repo1Instance.connect(dev1).mintSoftware("ipfs://QmSoftware1", [], []);
     const tokenId1 = (await repo1Instance.softwareCount()).toString();
     expect(tokenId1).to.equal("1");
+    expect(await repo1Instance.ownerOf(tokenId1)).to.equal(dev1.address);
 
     await repo2Instance.connect(dev2).mintSoftware("ipfs://QmSoftware2", [], []);
     const tokenId2 = (await repo2Instance.softwareCount()).toString();
     expect(tokenId2).to.equal("1");
+    expect(await repo2Instance.ownerOf(tokenId2)).to.equal(dev2.address);
 
-    // Mint software with dependency
-    await repo1Instance.connect(dev1).mintSoftware("ipfs://QmSoftware3", [dev2Repository], [[1]]);
-    const tokenId3 = (await repo1Instance.softwareCount()).toString();
-    expect(tokenId3).to.equal("2");
+    // // Mint software with dependency
+    // await repo1Instance.connect(dev1).mintSoftware("ipfs://QmSoftware3", [dev2Repository], [[1]]);
+    // const tokenId3 = (await repo1Instance.softwareCount()).toString();
+    // expect(tokenId3).to.equal("1"); // will fail since, he doesnt have a license
   });
 
   it("Should allow developers to list software on the marketplace", async function () {
@@ -99,6 +101,7 @@ describe("Decentralized Marketplace", function () {
   it("Should allow buyers to purchase software licenses", async function () {
     const buyerInitialBalance = await ethers.provider.getBalance(buyer.address);
     const dev2InitialBalance = await ethers.provider.getBalance(dev2.address);
+    const dev1InitialBalance = await ethers.provider.getBalance(dev1.address);
 
     // Buy software and mint license
     const tx = await marketplace.connect(buyer).buySoftware(dev2Repository, 1, {
@@ -118,8 +121,36 @@ describe("Decentralized Marketplace", function () {
     const buyerFinalBalance = await ethers.provider.getBalance(buyer.address);
     const dev2FinalBalance = await ethers.provider.getBalance(dev2.address);
 
-    expect(buyerFinalBalance).to.be.below(buyerInitialBalance);
-    expect(dev2FinalBalance).to.be.above(dev2InitialBalance);
+    expect(buyerFinalBalance).to.be.below(buyerInitialBalance); // buyer should have lower balance
+    expect(dev2FinalBalance).to.be.equal(dev2InitialBalance); // bacuse fees are stored in royaltymanager
+
+    const tx2 = await marketplace.connect(dev1).buySoftware(dev2Repository, 1, {value: ethers.utils.parseEther("2")});
+    const receipt2 = await tx2.wait();
+
+    const dev1LicenseId = receipt2.events.find((e) => e.event === "LicensePurchased").args.licenseId;
+    console.log("Minted License for DEV1 with ID: ", dev1LicenseId.toString());
+
+    const licenseOwner2 = await licenseManager.ownerOf(dev1LicenseId);
+    expect(licenseOwner2).to.equal(dev1.address);
+
+    const dev1finalBalance = await ethers.provider.getBalance(dev1.address);
+    const dev2FinalBalance2 = await ethers.provider.getBalance(dev2.address);
+
+    expect(dev1finalBalance).to.be.below(dev1InitialBalance);
+    expect(dev2FinalBalance2).to.be.equal(dev2InitialBalance);
+  });
+
+  it("Should allow developer to mint software NFTs with dependencies", async function () {
+    const repo1Instance = await Repository.attach(dev1Repository);
+
+    console.log("Dev1 address: ", dev1.address);
+    console.log("dev1Repository owner: ", await repo1Instance.getOwner());
+    console.log("dev1Repository developer: ", await repo1Instance.getDeveloper());
+
+    // Mint software with dependency
+    await repo1Instance.connect(dev1).mintSoftware("ipfs://QmSoftware3", [dev2Repository], [[1]]);
+    const tokenId3 = (await repo1Instance.softwareCount()).toString();
+    expect(tokenId3).to.equal("2"); // will fail since, he doesnt have a license
   });
 
   it("Should display the dependency tree for software", async function () {
@@ -132,4 +163,13 @@ describe("Decentralized Marketplace", function () {
     expect(deps[0]).to.equal(dev2Repository);
     expect(depTokenIds[0][0]).to.equal(1);
   });
+  it("Should know about corss-contract reference relationships", async function() {
+    const dev1Repo = await Repository.attach(dev1Repository);
+    const dev2Repo = await Repository.attach(dev2Repository);
+
+    const [address, tokenId] = await dev1Repo.referringOf(dev1Repository, 2);
+    console.log([address, tokenId]);
+    const [address2, tokenId2] = await dev2Repo.referredOf(dev2Repository, 1);
+    console.log([address2, tokenId2]);
+  })
 });

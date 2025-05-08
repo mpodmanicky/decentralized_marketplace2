@@ -3,6 +3,7 @@ pragma solidity ^0.8.4;
 
 import "./Repository.sol";
 import "./LicenseManager.sol";
+import "./RoyaltyManager.sol";
 
 /// @title Registry
 /// @notice This contract manages the registration of developers and their software, allows minting and manages references between software
@@ -10,7 +11,8 @@ contract Registry {
     address private immutable owner;
     uint256 private repositoryCounter;
     address private immutable licenseManager;
-    address marketplace;
+    address private marketplace;
+    address private immutable royaltyManager;
 
     // array of developer contracts
     mapping(address => bool) private repositories; // saving gas
@@ -36,8 +38,8 @@ contract Registry {
     constructor() {
         owner = msg.sender;
         repositoryCounter = 0;
-
         licenseManager = address(new LicenseManager(address(this)));
+        royaltyManager = address(new RoyaltyManager(address(this)));
     }
 
     function setMarketplace(address _marketplace) external {
@@ -134,5 +136,13 @@ contract Registry {
 
     function hasLicense(address user, address repository, uint256 softwareId) external view returns (bool) {
         return LicenseManager(licenseManager).hasLicense(user, repository, softwareId);
+    }
+
+    function getMarketplace() external view returns (address) {
+        return marketplace;
+    }
+
+    function getRoyaltyManager() external view returns (address) {
+        return royaltyManager;
     }
 }

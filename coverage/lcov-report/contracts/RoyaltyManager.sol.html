@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/RoyaltyManager.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> RoyaltyManager.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">41.18% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>7/17</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">25% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>3/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">33.33% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>2/6</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">50% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>12/24</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.4;
+&nbsp;
+import "./Registry.sol";
+&nbsp;
+/// @title RoyaltyManager
+/// @notice Manages royalty distribution with metadata for off-chain calculations
+contract RoyaltyManager {
+    address private immutable owner;
+    Registry private immutable registry;
+&nbsp;
+    // Store pending royalties for each developer
+    mapping(address =&gt; uint256) public pendingRoyalties;
+&nbsp;
+    // Track software publication data for off-chain royalty calculations
+    mapping(address =&gt; mapping(uint256 =&gt; uint256)) public softwarePublishTime;
+&nbsp;
+    // Events for indexer to track
+    event SoftwarePublished(address indexed repository, uint256 indexed softwareId, uint256 publishTime);
+    event SaleMade(address indexed repository, uint256 indexed softwareId, uint256 price, uint256 timestamp);
+    event RoyaltyAdded(address indexed developer, uint256 amount);
+    event RoyaltyWithdrawn(address indexed developer, uint256 amount);
+    event RoyaltyParametersUpdated(uint256 initialRate, uint256 decayFactor, uint256 decayPeriod);
+&nbsp;
+    // Errors
+    error NotAuthorized();
+    error InsufficientRoyalties();
+    error TransferFailed();
+&nbsp;
+    constructor(address _registry) {
+        owner = msg.sender;
+        registry = Registry(_registry);
+&nbsp;
+        // Emit initial royalty parameters for indexer
+        emit RoyaltyParametersUpdated(10, 95, 30 days);
+    }
+&nbsp;
+    /// @notice Record a software sale (for indexer to calculate royalties off-chain)
+    /// @param developer The software developer
+    /// @param repository The repository address
+    /// @param softwareId The software ID
+    /// @param price The sale price
+    function recordSale(
+        address developer,
+        address repository,
+        uint256 softwareId,
+        uint256 price
+    ) external payable {
+        // Only the marketplace can record sales
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (msg.sender != registry.getMarketplace()) revert NotAuthorized();
+&nbsp;
+        // Get or set publish time
+        uint256 publishTime = softwarePublishTime[repository][softwareId];
+        if (publishTime == 0) {
+            publishTime = block.timestamp;
+            softwarePublishTime[repository][softwareId] = publishTime;
+            emit SoftwarePublished(repository, softwareId, publishTime);
+        }
+&nbsp;
+        // Emit sale event for the indexer to process
+        emit SaleMade(repository, softwareId, price, block.timestamp);
+&nbsp;
+        // Transfer full payment to developer - royalties will be handled by off-chain service
+        pendingRoyalties[developer] += msg.value;
+        emit RoyaltyAdded(developer, msg.value);
+    }
+&nbsp;
+    /// @notice Allow developers to withdraw their royalties
+<span class="fstat-no" title="function not covered" >    function withdrawRoyalties() external {</span>
+<span class="cstat-no" title="statement not covered" >        uint256 amount = pendingRoyalties[msg.sender];</span>
+<span class="cstat-no" title="statement not covered" >        if (amount == 0) revert InsufficientRoyalties();</span>
+&nbsp;
+        // Reset pending royalties before transfer to prevent reentrancy
+        pendingRoyalties[msg.sender] = 0;
+&nbsp;
+        // Transfer royalties to developer
+<span class="cstat-no" title="statement not covered" >        (bool success, ) = payable(msg.sender).call{value: amount}("");</span>
+<span class="cstat-no" title="statement not covered" >        if (!success) revert TransferFailed();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        emit RoyaltyWithdrawn(msg.sender, amount);</span>
+    }
+&nbsp;
+    /// @notice Update royalty parameters (owner only)
+    /// @dev These parameters are only used off-chain by the indexer
+<span class="fstat-no" title="function not covered" >    function updateRoyaltyParameters(</span>
+        uint256 _initialRate,
+        uint256 _decayFactor,
+        uint256 _decayPeriod
+    ) external {
+<span class="cstat-no" title="statement not covered" >        if (msg.sender != owner) revert NotAuthorized();</span>
+<span class="cstat-no" title="statement not covered" >        emit RoyaltyParametersUpdated(_initialRate, _decayFactor, _decayPeriod);</span>
+    }
+&nbsp;
+    /// @notice Add royalties manually (only for off-chain oracle/indexer)
+    /// @dev This allows an authorized oracle to adjust royalties based on off-chain calculations
+<span class="fstat-no" title="function not covered" >    function addRoyalties(address developer, uint256 amount) external payable {</span>
+        // Only owner or oracle can call this
+<span class="cstat-no" title="statement not covered" >        if (msg.sender != owner) revert NotAuthorized();</span>
+&nbsp;
+        pendingRoyalties[developer] += amount;
+<span class="cstat-no" title="statement not covered" >        emit RoyaltyAdded(developer, amount);</span>
+    }
+&nbsp;
+    /// @notice Get pending royalties for a developer
+<span class="fstat-no" title="function not covered" >    function getPendingRoyalties(address developer) external view returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        return pendingRoyalties[developer];</span>
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 08 2025 19:10:38 GMT+0200 (stredoeurópsky letný čas)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

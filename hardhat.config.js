@@ -3,6 +3,7 @@ require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ethers");
 require("hardhat-gas-reporter");
 require("@nomicfoundation/hardhat-verify");
+require("solidity-coverage");
 
 module.exports = {
   solidity: {

@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "deploy-local": "npx hardhat run scripts/deploy.js --network localhost",
+    "start-indexer": "npx hardhat run scripts/indexer.js --network localhost",
+    "simulate-purchases": "npx hardhat run scripts/simulate.js --network localhost",
+    "check-royalties": "npx hardhat run scripts/royalties.js --network localhost"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-verify": "^2.0.13",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
@@ -8,9 +14,10 @@
     "ethereum-waffle": "^4.0.10",
     "ethers": "^5.8.0",
     "hardhat": "^2.23.0",
-    "hardhat-gas-reporter": "^2.2.3"
+    "hardhat-gas-reporter": "^2.2.3",
+    "solidity-coverage": "^0.8.16"
   },
   "dependencies": {
-    "sqlite3": "^5.1.7"
+    "better-sqlite3": "^11.10.0"
   }
 }

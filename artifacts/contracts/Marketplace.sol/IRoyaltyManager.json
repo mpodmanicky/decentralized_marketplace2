@@ -1,0 +1,39 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IRoyaltyManager",
+  "sourceName": "contracts/Marketplace.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "repository",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "softwareId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "softwarePrice",
+          "type": "uint256"
+        }
+      ],
+      "name": "recordSale",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

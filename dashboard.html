@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Royalty Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+    h1, h2 { color: #333; }
+    .card { background: #f9f9f9; border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background-color: #f2f2f2; }
+    tr:hover { background-color: #f5f5f5; }
+    .tabs { display: flex; margin-bottom: 20px; }
+    .tab { padding: 10px 20px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px 4px 0 0; margin-right: 5px; }
+    .tab.active { background-color: #f0f0f0; border-bottom: none; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    pre { background: #f0f0f0; padding: 10px; border-radius: 4px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>Royalty Dashboard</h1>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="sales">Sales</div>
+    <div class="tab" data-tab="publications">Publications</div>
+    <div class="tab" data-tab="royalties">Royalties</div>
+    <div class="tab" data-tab="parameters">Parameters</div>
+  </div>
+
+  <div id="sales" class="tab-content active">
+    <h2>Recent Sales</h2>
+    <div class="card">
+      <table id="sales-table">
+        <thead>
+          <tr>
+            <th>Repository</th>
+            <th>Software ID</th>
+            <th>Price (ETH)</th>
+            <th>Timestamp</th>
+            <th>Buyer</th>
+            <th>Developer</th>
+            <th>Royalty (ETH)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="7">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="publications" class="tab-content">
+    <h2>Software Publications</h2>
+    <div class="card">
+      <table id="publications-table">
+        <thead>
+          <tr>
+            <th>Repository</th>
+            <th>Software ID</th>
+            <th>Publish Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="3">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="royalties" class="tab-content">
+    <h2>Developer Royalties</h2>
+    <div class="card">
+      <label for="developer-address">Developer Address:</label>
+      <input type="text" id="developer-address" placeholder="0x..." style="width: 350px; padding: 5px;">
+      <button id="check-royalties" style="padding: 5px 10px;">Check Royalties</button>
+
+      <div id="royalty-result" style="margin-top: 20px;">
+        <p>Enter a developer address to check their royalties.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="parameters" class="tab-content">
+    <h2>Royalty Parameters</h2>
+    <div class="card">
+      <div id="parameters-content">
+        <p>Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Format timestamp
+    function formatTimestamp(timestamp) {
+      return new Date(timestamp * 1000).toLocaleString();
+    }
+
+    // Format address
+    function formatAddress(address) {
+      return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+    }
+
+    // Format ETH
+    function formatEth(wei) {
+      return (parseInt(wei) / 1e18).toFixed(6);
+    }
+
+    // Load sales data
+    async function loadSales() {
+      try {
+        const response = await fetch('/api/sales');
+        const sales = await response.json();
+
+        const tableBody = document.querySelector('#sales-table tbody');
+        tableBody.innerHTML = '';
+
+        if (sales.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="7">No sales recorded yet</td></tr>';
+          return;
+        }
+
+        sales.forEach(sale => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td title="${sale.repository}">${formatAddress(sale.repository)}</td>
+            <td>${sale.software_id}</td>
+            <td>${formatEth(sale.price)}</td>
+            <td>${formatTimestamp(sale.timestamp)}</td>
+            <td title="${sale.buyer}">${formatAddress(sale.buyer)}</td>
+            <td title="${sale.developer}">${formatAddress(sale.developer)}</td>
+            <td>${sale.royalty_amount ? formatEth(sale.royalty_amount) : 'Calculating...'}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error loading sales:', error);
+      }
+    }
+
+    // Load publications data
+    async function loadPublications() {
+      try {
+        const response = await fetch('/api/publications');
+        const publications = await response.json();
+
+        const tableBody = document.querySelector('#publications-table tbody');
+        tableBody.innerHTML = '';
+
+        if (publications.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="3">No publications recorded yet</td></tr>';
+          return;
+        }
+
+        publications.forEach(pub => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td title="${pub.repository}">${formatAddress(pub.repository)}</td>
+            <td>${pub.software_id}</td>
+            <td>${formatTimestamp(pub.publish_time)}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error loading publications:', error);
+      }
+    }
+
+    // Load parameters
+    async function loadParameters() {
+      try {
+        const response = await fetch('/api/parameters');
+        const params = await response.json();
+
+        document.getElementById('parameters-content').innerHTML = `
+          <p><strong>Initial Rate:</strong> ${params.initial_rate || params.initialRate}%</p>
+          <p><strong>Decay Factor:</strong> ${params.decay_factor || params.decayFactor}%</p>
+          <p><strong>Decay Period:</strong> ${params.decay_period || params.decayPeriod} seconds
+            (${Math.round((params.decay_period || params.decayPeriod) / (24 * 60 * 60))} days)</p>
+        `;
+      } catch (error) {
+        console.error('Error loading parameters:', error);
+      }
+    }
+
+    // Check royalties
+    document.getElementById('check-royalties').addEventListener('click', async () => {
+      const developerAddress = document.getElementById('developer-address').value.trim();
+
+      if (!developerAddress) {
+        alert('Please enter a developer address');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/royalties/${developerAddress}`);
+        const data = await response.json();
+
+        let html = `
+          <h3>Pending Royalties</h3>
+          <p>${formatEth(data.pending)} ETH</p>
+
+          <h3>Sales History</h3>
+        `;
+
+        if (data.sales && data.sales.length > 0) {
+          html += `
+            <table>
+              <thead>
+                <tr>
+                  <th>Software ID</th>
+                  <th>Price (ETH)</th>
+                  <th>Royalty (ETH)</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+
+          data.sales.forEach(sale => {
+            html += `
+              <tr>
+                <td>${sale.software_id}</td>
+                <td>${formatEth(sale.price)}</td>
+                <td>${sale.royalty_amount ? formatEth(sale.royalty_amount) : 'Calculating...'}</td>
+                <td>${formatTimestamp(sale.timestamp)}</td>
+              </tr>
+            `;
+          });
+
+          html += `
+              </tbody>
+            </table>
+          `;
+        } else {
+          html += '<p>No sales recorded for this developer</p>';
+        }
+
+        document.getElementById('royalty-result').innerHTML = html;
+      } catch (error) {
+        console.error('Error checking royalties:', error);
+        document.getElementById('royalty-result').innerHTML = '<p>Error checking royalties. Please try again.</p>';
+      }
+    });
+
+    // Initial loads
+    loadSales();
+    loadPublications();
+    loadParameters();
+
+    // Refresh data every 30 seconds
+    setInterval(() => {
+      loadSales();
+      loadPublications();
+      loadParameters();
+    }, 30000);
+  </script>
+</body>
+</html>

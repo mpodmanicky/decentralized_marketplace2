@@ -3,6 +3,15 @@ pragma solidity ^0.8.4;
 
 import "./Registry.sol";
 
+interface IRoyaltyManager {
+  function recordSale (
+    address developer,
+    address repository,
+    uint256 softwareId,
+    uint256 softwarePrice
+  ) external payable;
+}
+
 /// @title IMarketplace
 /// @notice Interface for the Marketplace contract
 /// @dev This interface defines the core functions that can be called externally
@@ -123,7 +132,16 @@ contract Marketplace is IMarketplace {
 
         // Transfer the payment to the developer
         /// @todo az po mint licencie reetrancy-attack / moznoe nejaky withdraw mechanizmus
-        payable(developer).transfer(msg.value);
+        // Record sale for off-chain royalty calculations
+        address royaltyManagerAddress = registry.getRoyaltyManager();
+        IRoyaltyManager royaltyManager = IRoyaltyManager(royaltyManagerAddress);
+
+        royaltyManager.recordSale{value: msg.value}(
+            developer,
+            repository,
+            tokenId,
+            price
+        );
 
         // Emit event for the frontend
         emit LicensePurchased(msg.sender, repository, tokenId, licenseId, price);

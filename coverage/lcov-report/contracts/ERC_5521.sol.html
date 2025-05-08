@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/ERC_5521.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> ERC_5521.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">70.67% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>53/75</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">40.38% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>21/52</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">93.33% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>14/15</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">71.11% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>64/90</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.4;
+&nbsp;
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "./IERC_5521.sol";
+&nbsp;
+contract ERC_5521 is ERC721, ERC721URIStorage, IERC_5521, TargetContract {
+    struct Relationship {
+        mapping(address =&gt; uint256[]) referring;
+        mapping(address =&gt; uint256[]) referred;
+        address[] referringKeys;
+        address[] referredKeys;
+        uint256 createdTimestamp; // unix timestamp when the rNFT is being created
+    }
+&nbsp;
+    // extensible parameters
+    // ...
+&nbsp;
+    mapping(uint256 =&gt; Relationship) internal _relationship;
+    address contractOwner = address(0);
+&nbsp;
+    constructor(string memory name_, string memory symbol_) ERC721(name_, symbol_) {
+        contractOwner = msg.sender;
+    }
+&nbsp;
+    function safeMint(address to, uint256 tokenId, address[] memory addresses, uint256[][] memory _tokenIds) public {
+        // require(msg.sender == contractOwner, "ERC_rNFT: Only contract owner can mint");
+        // require(msg.sender == to, "ERC-5521: Only the buyer can mint");
+        _safeMint(to, tokenId);
+        // updated the reference logic incase we do not refer any other dependencies
+        if (_tokenIds.length != 0 &amp;&amp; addresses.length != 0) {
+            setNode(tokenId, addresses, _tokenIds);
+        }
+    }
+&nbsp;
+    /// @notice Set the metadata URI for a tokem
+    /// @param tokenId The ID of the token
+    /// @param _tokenURI The URI to set
+    function setTokenURI(address developer, uint256 tokenId, string memory _tokenURI) public {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_exists(tokenId), "ERC_5521: token ID not existed");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(ownerOf(tokenId) == developer, "ERC_5521: transfer caller is not owner nor approved");
+        _setTokenURI(tokenId, _tokenURI);
+    }
+&nbsp;
+    /// @notice set the referred list of an rNFT associated with different contract addresses and update the referring list of each one in the referred list
+    /// @param tokenIds array of rNFTs, recommended to check duplication at the caller's end
+    function setNode(uint256 tokenId, address[] memory addresses, uint256[][] memory tokenIds)
+        public
+        virtual
+        override
+    {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(addresses.length == tokenIds.length, "Addresses and TokenID arrays must have the same length");
+        for (uint256 i = 0; i &lt; tokenIds.length; i++) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (tokenIds[i].length == 0) {
+<span class="cstat-no" title="statement not covered" >                revert("ERC_5521: the referring list cannot be empty")</span>;
+            }
+        }
+        setNodeReferring(addresses, tokenId, tokenIds);
+        setNodeReferred(addresses, tokenId, tokenIds);
+    }
+&nbsp;
+    /// @notice set the referring list of an rNFT associated with different contract addresses
+    /// @param _tokenIds array of rNFTs associated with addresses, recommended to check duplication at the caller's end
+    function setNodeReferring(address[] memory addresses, uint256 tokenId, uint256[][] memory _tokenIds) private {
+        /// require(ownerOf(tokenId) == msg.sender, "ERC_5521: transfer caller is not owner nor approved");
+&nbsp;
+        Relationship storage relationship = _relationship[tokenId];
+&nbsp;
+        for (uint256 i = 0; i &lt; addresses.length; i++) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (relationship.referring[addresses[i]].length == 0) {
+                relationship.referringKeys.push(addresses[i]);
+            } // Add the address if it's a new entry
+            relationship.referring[addresses[i]] = _tokenIds[i];
+        }
+&nbsp;
+        relationship.createdTimestamp = block.timestamp;
+        emitEvents(tokenId, msg.sender);
+    }
+&nbsp;
+    /// @notice set the referred list of an rNFT associated with different contract addresses
+    /// @param _tokenIds array of rNFTs associated with addresses, recommended to check duplication at the caller's end
+    function setNodeReferred(address[] memory addresses, uint256 tokenId, uint256[][] memory _tokenIds) private {
+        for (uint256 i = 0; i &lt; addresses.length; i++) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (addresses[i] == address(this)) {
+<span class="cstat-no" title="statement not covered" >                for (uint256 j = 0; j &lt; _tokenIds[i].length; j++) {</span>
+<span class="cstat-no" title="statement not covered" >                    Relationship storage relationship = _relationship[_tokenIds[i][j]];</span>
+<span class="cstat-no" title="statement not covered" >                    if (relationship.referred[addresses[i]].length == 0) {</span>
+<span class="cstat-no" title="statement not covered" >                        relationship.referredKeys.push(addresses[i])</span>;
+                    } // Add the address if it's a new entry
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    require(tokenId != _tokenIds[i][j], "ERC_5521: self-reference not allowed")</span>;
+<span class="cstat-no" title="statement not covered" >                    if (relationship.createdTimestamp &gt;= block.timestamp) {</span>
+<span class="cstat-no" title="statement not covered" >                        revert("ERC_5521: the referred rNFT needs to be a predecessor")</span>;
+                    } // Make sure the reference complies with the timing sequence
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    relationship.referred[address(this)].push(tokenId)</span>;
+<span class="cstat-no" title="statement not covered" >                    emitEvents(_tokenIds[i][j], ownerOf(_tokenIds[i][j]))</span>;
+                }
+            } else {
+                TargetContract targetContractInstance = TargetContract(addresses[i]);
+                bool isSupports = targetContractInstance.supportsInterface(type(TargetContract).interfaceId);
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (isSupports) {
+                    // The target contract supports the interface, safe to call functions of the interface.
+                    targetContractInstance.setNodeReferredExternal(address(this), tokenId, _tokenIds[i]);
+                }
+            }
+        }
+    }
+&nbsp;
+    /// @notice set the referred list of an rNFT associated with different contract addresses
+    /// @param _tokenIds array of rNFTs associated with addresses, recommended to check duplication at the caller's end
+    function setNodeReferredExternal(address _address, uint256 tokenId, uint256[] memory _tokenIds) external {
+        for (uint256 i = 0; i &lt; _tokenIds.length; i++) {
+            Relationship storage relationship = _relationship[_tokenIds[i]];
+            if (relationship.referred[_address].length == 0) {
+                relationship.referredKeys.push(_address);
+            } // Add the address if it's a new entry
+&nbsp;
+            <span class="missing-if-branch" title="else path not taken" >E</span>require(_address != address(this), "ERC_5521: this must be an external contract address");
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (relationship.createdTimestamp &gt;= block.timestamp) {
+<span class="cstat-no" title="statement not covered" >                revert("ERC_5521: the referred rNFT needs to be a predecessor")</span>;
+            } // Make sure the reference complies with the timing sequence
+&nbsp;
+            relationship.referred[_address].push(tokenId);
+            emitEvents(_tokenIds[i], ownerOf(_tokenIds[i]));
+        }
+    }
+&nbsp;
+    /// @notice Get the referring list of an rNFT
+    /// @param tokenId The considered rNFT, _address The corresponding contract address
+    /// @return The referring mapping of an rNFT
+    function referringOf(address _address, uint256 tokenId)
+        external
+        view
+        virtual
+        override(IERC_5521, TargetContract)
+        returns (address[] memory, uint256[][] memory)
+    {
+        address[] memory _referringKeys;
+        uint256[][] memory _referringValues;
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (_address == address(this)) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>require(_exists(tokenId), "ERC_5521: token ID not existed");
+            (_referringKeys, _referringValues) = convertMap(tokenId, true);
+        } else {
+<span class="cstat-no" title="statement not covered" >            TargetContract targetContractInstance = TargetContract(_address);</span>
+<span class="cstat-no" title="statement not covered" >            require(</span>
+                targetContractInstance.supportsInterface(type(TargetContract).interfaceId),
+                "ERC_5521: target contract not supported"
+            );
+            (_referringKeys, _referringValues) = targetContractInstance.referringOf(_address, tokenId);
+        }
+        return (_referringKeys, _referringValues);
+    }
+&nbsp;
+    /// @notice Get the referred list of an rNFT
+    /// @param tokenId The considered rNFT, _address The corresponding contract address
+    /// @return The referred mapping of an rNFT
+    function referredOf(address _address, uint256 tokenId)
+        external
+        view
+        virtual
+        override(IERC_5521, TargetContract)
+        returns (address[] memory, uint256[][] memory)
+    {
+        address[] memory _referredKeys;
+        uint256[][] memory _referredValues;
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (_address == address(this)) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>require(_exists(tokenId), "ERC_5521: token ID not existed");
+            (_referredKeys, _referredValues) = convertMap(tokenId, false);
+        } else {
+<span class="cstat-no" title="statement not covered" >            TargetContract targetContractInstance = TargetContract(_address);</span>
+<span class="cstat-no" title="statement not covered" >            require(</span>
+                targetContractInstance.supportsInterface(type(TargetContract).interfaceId),
+                "ERC_5521: target contract not supported"
+            );
+            (_referredKeys, _referredValues) = targetContractInstance.referredOf(_address, tokenId);
+        }
+        return (_referredKeys, _referredValues);
+    }
+&nbsp;
+    /// @notice Get the timestamp of an rNFT when is being created.
+    /// @param `tokenId` of the rNFT being focused, `_address` of contract address associated with the focused rNFT.
+    /// @return The timestamp of the rNFT when is being created with uint256 format.
+<span class="fstat-no" title="function not covered" >    function createdTimestampOf(address _address, uint256 tokenId)</span>
+        external
+        view
+        override(IERC_5521, TargetContract)
+        returns (uint256)
+    {
+<span class="cstat-no" title="statement not covered" >        uint256 createdTimestamp;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (_address == address(this)) {</span>
+<span class="cstat-no" title="statement not covered" >            require(_exists(tokenId), "ERC_5521: token ID not existed")</span>;
+<span class="cstat-no" title="statement not covered" >            Relationship storage relationship = _relationship[tokenId];</span>
+            createdTimestamp = relationship.createdTimestamp;
+        } else {
+<span class="cstat-no" title="statement not covered" >            TargetContract targetContractInstance = TargetContract(_address);</span>
+<span class="cstat-no" title="statement not covered" >            require(</span>
+                targetContractInstance.supportsInterface(type(TargetContract).interfaceId),
+                "ERC_5521: target contract not supported"
+            );
+            createdTimestamp = targetContractInstance.createdTimestampOf(_address, tokenId);
+        }
+<span class="cstat-no" title="statement not covered" >        return createdTimestamp;</span>
+    }
+&nbsp;
+    /// @notice Override the tokenURI function to resolve ambiguity
+    function tokenURI(uint256 tokenId) public view virtual override(ERC721, ERC721URIStorage) returns (string memory) {
+        return super.tokenURI(tokenId);
+    }
+&nbsp;
+    /// @dev See {IERC165-supportsInterface}.
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC721, ERC721URIStorage, IERC_5521, TargetContract)
+        returns (bool)
+    {
+        return <span class="branch-0 cbranch-no" title="branch not covered" >interfaceId == type(IERC_5521).interfaceId</span> || interfaceId == type(TargetContract).interfaceId
+            || <span class="branch-1 cbranch-no" title="branch not covered" >super.supportsInterface(interfaceId)</span>;
+    }
+&nbsp;
+    // @notice Emit an event of UpdateNode
+    function emitEvents(uint256 tokenId, address sender) private {
+        (address[] memory _referringKeys, uint256[][] memory _referringValues) = convertMap(tokenId, true);
+        (address[] memory _referredKeys, uint256[][] memory _referredValues) = convertMap(tokenId, false);
+&nbsp;
+        emit UpdateNode(tokenId, sender, _referringKeys, _referringValues, _referredKeys, _referredValues);
+    }
+&nbsp;
+    // @notice Convert a specific `local` token mapping to a key array and a value array
+    function convertMap(uint256 tokenId, bool isReferring)
+        private
+        view
+        returns (address[] memory, uint256[][] memory)
+    {
+        Relationship storage relationship = _relationship[tokenId];
+&nbsp;
+        address[] memory returnKeys;
+        uint256[][] memory returnValues;
+&nbsp;
+        if (isReferring) {
+            returnKeys = relationship.referringKeys;
+            returnValues = new uint256[][](returnKeys.length);
+            for (uint256 i = 0; i &lt; returnKeys.length; i++) {
+                returnValues[i] = relationship.referring[returnKeys[i]];
+            }
+        } else {
+            returnKeys = relationship.referredKeys;
+            returnValues = new uint256[][](returnKeys.length);
+            for (uint256 i = 0; i &lt; returnKeys.length; i++) {
+                returnValues[i] = relationship.referred[returnKeys[i]];
+            }
+        }
+        return (returnKeys, returnValues);
+    }
+&nbsp;
+    /// @notice Check if a token exists
+    /// @param tokenId The ID of the token to check
+    /// @return True if the token exists, false otherwise
+    function _exists(uint256 tokenId) internal view returns (bool) {
+        return ownerOf(tokenId) != address(0);
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 08 2025 19:10:38 GMT+0200 (stredoeurópsky letný čas)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

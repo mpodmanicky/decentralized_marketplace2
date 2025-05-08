@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/LicenseManager.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> LicenseManager.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">66.67% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>20/30</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">37.5% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>3/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">75% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>3/4</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">64.29% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>27/42</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.4;
+&nbsp;
+import "./ERC_5521.sol";
+import "./Repository.sol";
+&nbsp;
+/// @title LicenseManager
+/// @dev This contract manages licenses for software in the Repository contracts
+contract LicenseManager is ERC_5521 {
+    address private immutable owner;
+    uint256 private licenseCounter = 1000000;
+&nbsp;
+    mapping(uint256 =&gt; address) public licenseToRepository; // licenseId =&gt; repository address
+    mapping(uint256 =&gt; uint256) public licenseToSoftware; // licenseId =&gt; softwareId
+    mapping(address =&gt; mapping(uint256 =&gt; uint256[])) public softwareToLicenses; // repository =&gt; softwareId =&gt; licenseIds
+&nbsp;
+    // Custom errors
+    error NotAuthorized();
+    error RepositoryNotFound();
+    error SoftwareNotFound();
+&nbsp;
+    event LicenseCreated(
+        uint256 indexed licenseId,
+        address indexed repository,
+        uint256 indexed softwareId,
+        address licensee
+    );
+&nbsp;
+    constructor(address _registry) ERC_5521("Software License", "LICENSE") {
+        owner = _registry;
+    }
+&nbsp;
+    /// @notice Mint a new license token for a specific software
+    /// @param licensee The address that will own the license
+    /// @param repository The address of the Repository contract containing the software
+    /// @param softwareId The ID of the software being licensed
+    /// @return licenseId The ID of the newly minted license
+    function mintLicense(
+        address licensee,
+        address repository,
+        uint256 softwareId
+    ) public returns (uint256) {
+        // Validation
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (msg.sender != owner) revert NotAuthorized();
+&nbsp;
+        // Check if repository contract exists by calling a function on it
+        Repository repo = Repository(repository);
+        try repo.getDeveloper() returns (address) {
+            // Repository exists, continue
+        } catch {
+            revert RepositoryNotFound();
+        }
+&nbsp;
+        // Check if software exists in repository
+        try repo.getSoftwareURI(softwareId) returns (string memory) {
+            // Software exists, continue
+        } catch {
+            revert SoftwareNotFound();
+        }
+&nbsp;
+        // Generate unique license ID
+        uint256 licenseId = licenseCounter;
+        licenseCounter++;
+&nbsp;
+        // Set up references to the software NFT
+        address[] memory refAddresses = new address[](1);
+        refAddresses[0] = repository;
+&nbsp;
+        uint256[][] memory refTokenIds = new uint256[][](1);
+        uint256[] memory softwareIds = new uint256[](1);
+        softwareIds[0] = softwareId;
+        refTokenIds[0] = softwareIds;
+&nbsp;
+        // Mint the license NFT with reference to the software NFT
+        safeMint(licensee, licenseId, refAddresses, refTokenIds);
+&nbsp;
+        // Get software URI from repository
+        string memory softwareURI = repo.getSoftwareURI(softwareId);
+&nbsp;
+        // Set license URI based on software URI
+        string memory licenseURI = string(abi.encodePacked("license-for-", softwareURI));
+        _setTokenURI(licenseId, licenseURI);
+&nbsp;
+        // Store license mappings
+        licenseToRepository[licenseId] = repository;
+        licenseToSoftware[licenseId] = softwareId;
+        softwareToLicenses[repository][softwareId].push(licenseId);
+&nbsp;
+        emit LicenseCreated(licenseId, repository, softwareId, licensee);
+&nbsp;
+        return licenseId;
+    }
+&nbsp;
+    /// @notice Check if an address owns a license for a specific software
+    /// @param user The address to check
+    /// @param repository The repository contract address
+    /// @param softwareId The software ID
+    /// @return True if the user has a license for the software
+    function hasLicense(address user, address repository, uint256 softwareId) public view returns (bool) {
+        uint256[] memory licenses = softwareToLicenses[repository][softwareId];
+&nbsp;
+        for (uint256 i = 0; i &lt; licenses.length; i++) {
+            uint256 licenseId = licenses[i];
+            if (_exists(licenseId) &amp;&amp; ownerOf(licenseId) == user) {
+                return true;
+            }
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return false;</span>
+    }
+&nbsp;
+    /// @notice Get all licenses owned by a user for a specific software
+    /// @param user The address to check
+    /// @param repository The repository contract address
+    /// @param softwareId The software ID
+    /// @return Array of license IDs owned by the user for this software
+<span class="fstat-no" title="function not covered" >    function getUserLicenses(</span>
+        address user,
+        address repository,
+        uint256 softwareId
+    ) public view returns (uint256[] memory) {
+<span class="cstat-no" title="statement not covered" >        uint256[] memory allLicenses = softwareToLicenses[repository][softwareId];</span>
+<span class="cstat-no" title="statement not covered" >        uint256 count = 0;</span>
+&nbsp;
+        // First count how many licenses the user owns
+<span class="cstat-no" title="statement not covered" >        for (uint256 i = 0; i &lt; allLicenses.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >            if (_exists(allLicenses[i]) &amp;&amp; ownerOf(allLicenses[i]) == user) {</span>
+                count++;
+            }
+        }
+&nbsp;
+        // Create array of the right size
+<span class="cstat-no" title="statement not covered" >        uint256[] memory userLicenses = new uint256[](count);</span>
+<span class="cstat-no" title="statement not covered" >        uint256 index = 0;</span>
+&nbsp;
+        // Fill the array
+<span class="cstat-no" title="statement not covered" >        for (uint256 i = 0; i &lt; allLicenses.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >            if (_exists(allLicenses[i]) &amp;&amp; ownerOf(allLicenses[i]) == user) {</span>
+                userLicenses[index] = allLicenses[i];
+                index++;
+            }
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return userLicenses;</span>
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 08 2025 19:10:38 GMT+0200 (stredoeurópsky letný čas)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
