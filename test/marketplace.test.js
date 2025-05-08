@@ -169,7 +169,9 @@ describe("Decentralized Marketplace", function () {
 
     const [address, tokenId] = await dev1Repo.referringOf(dev1Repository, 2);
     console.log([address, tokenId]);
+    expect(address).to.include(dev2Repository);
     const [address2, tokenId2] = await dev2Repo.referredOf(dev2Repository, 1);
     console.log([address2, tokenId2]);
+    expect(address2).to.include(dev1Repository);
   })
 });
