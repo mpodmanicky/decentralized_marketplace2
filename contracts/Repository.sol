@@ -21,7 +21,6 @@ interface IRegistry {
 contract Repository is ERC_5521 {
     address private immutable owner;
     address private immutable developer;
-    uint256 private licenseCounter = 1000000;
     uint256 public softwareCount;
 
     struct SoftwareMeta {

@@ -41,7 +41,7 @@ interface IMarketplace {
 }
 
 contract Marketplace is IMarketplace {
-    Registry private registry;
+    Registry private immutable registry;
 
     struct Listing {
         address developer;

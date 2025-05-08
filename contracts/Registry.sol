@@ -7,7 +7,7 @@ import "./RoyaltyManager.sol";
 
 /// @title Registry
 /// @notice This contract manages the registration of developers and their software, allows minting and manages references between software
-contract Registry {
+contract Registry is ILicenseManager, IRegistry {
     address private immutable owner;
     uint256 private repositoryCounter;
     address private immutable licenseManager;

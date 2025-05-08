@@ -1,0 +1,362 @@
+slither ../
+'npx hardhat clean' running (wd: /home/martin/decentralized_marketplace2)
+'npx hardhat clean --global' running (wd: /home/martin/decentralized_marketplace2)
+'npx hardhat compile --force' running (wd: /home/martin/decentralized_marketplace2)
+INFO:Detectors: High
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) has bitwise-xor operator ^ instead of the exponentiation operator **:
+	 - inverse = (3 * denominator) ^ 2 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#257)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-exponentiation
+INFO:Detectors: Medium
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse = (3 * denominator) ^ 2 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#257)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#261)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#262)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#263)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#264)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#265)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#266)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- low = low / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#245)
+	- result = low * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#272)
+Math.invMod(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#315-361) performs a multiplication on the result of a division:
+	- quotient = gcd / remainder (node_modules/@openzeppelin/contracts/utils/math/Math.sol#337)
+	- (gcd,remainder) = (remainder,gcd - remainder * quotient) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#339-346)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#divide-before-multiply
+INFO:Detectors: Medium
+Reentrancy in ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109):
+	External calls:
+	- targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	State variables written after the call(s):
+	- relationship.referredKeys.push(addresses[i]) (contracts/ERC_5521.sol#89)
+	ERC_5521._relationship (contracts/ERC_5521.sol#20) can be used in cross function reentrancies:
+	- ERC_5521.convertMap(uint256,bool) (contracts/ERC_5521.sol#236-260)
+	- ERC_5521.createdTimestampOf(address,uint256) (contracts/ERC_5521.sol#187-208)
+	- ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109)
+	- ERC_5521.setNodeReferredExternal(address,uint256,uint256[]) (contracts/ERC_5521.sol#113-128)
+	- ERC_5521.setNodeReferring(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#65-79)
+	- relationship.referred[address(this)].push(tokenId) (contracts/ERC_5521.sol#97)
+	ERC_5521._relationship (contracts/ERC_5521.sol#20) can be used in cross function reentrancies:
+	- ERC_5521.convertMap(uint256,bool) (contracts/ERC_5521.sol#236-260)
+	- ERC_5521.createdTimestampOf(address,uint256) (contracts/ERC_5521.sol#187-208)
+	- ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109)
+	- ERC_5521.setNodeReferredExternal(address,uint256,uint256[]) (contracts/ERC_5521.sol#113-128)
+	- ERC_5521.setNodeReferring(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#65-79)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-1
+INFO:Detectors: Medium
+LicenseManager.mintLicense(address,address,uint256) (contracts/LicenseManager.sol#38-92) ignores return value by repo.getDeveloper() (contracts/LicenseManager.sol#48-52)
+LicenseManager.mintLicense(address,address,uint256) (contracts/LicenseManager.sol#38-92) ignores return value by repo.getSoftwareURI(softwareId) (contracts/LicenseManager.sol#55-59)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return
+INFO:Detectors: Low
+LicenseManager.constructor(address)._registry (contracts/LicenseManager.sol#29) lacks a zero-check on :
+		- owner = _registry (contracts/LicenseManager.sol#30)
+Registry.setMarketplace(address)._marketplace (contracts/Registry.sol#45) lacks a zero-check on :
+		- marketplace = _marketplace (contracts/Registry.sol#47)
+Repository.constructor(address,address)._registry (contracts/Repository.sol#50) lacks a zero-check on :
+		- owner = _registry (contracts/Repository.sol#53)
+Repository.constructor(address,address)._developer (contracts/Repository.sol#51) lacks a zero-check on :
+		- developer = _developer (contracts/Repository.sol#54)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+INFO:Detectors:
+ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109) has external calls inside a loop: isSupports = targetContractInstance.supportsInterface(type()(TargetContract).interfaceId) (contracts/ERC_5521.sol#102)
+	Calls stack containing the loop:
+		ERC_5521.safeMint(address,uint256,address[],uint256[][])
+		ERC_5521.setNode(uint256,address[],uint256[][])
+ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109) has external calls inside a loop: targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	Calls stack containing the loop:
+		ERC_5521.safeMint(address,uint256,address[],uint256[][])
+		ERC_5521.setNode(uint256,address[],uint256[][])
+ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109) has external calls inside a loop: isSupports = targetContractInstance.supportsInterface(type()(TargetContract).interfaceId) (contracts/ERC_5521.sol#102)
+	Calls stack containing the loop:
+		ERC_5521.setNode(uint256,address[],uint256[][])
+ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109) has external calls inside a loop: targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	Calls stack containing the loop:
+		ERC_5521.setNode(uint256,address[],uint256[][])
+ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109) has external calls inside a loop: isSupports = targetContractInstance.supportsInterface(type()(TargetContract).interfaceId) (contracts/ERC_5521.sol#102)
+	Calls stack containing the loop:
+		LicenseManager.mintLicense(address,address,uint256)
+		ERC_5521.safeMint(address,uint256,address[],uint256[][])
+		ERC_5521.setNode(uint256,address[],uint256[][])
+ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109) has external calls inside a loop: targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	Calls stack containing the loop:
+		LicenseManager.mintLicense(address,address,uint256)
+		ERC_5521.safeMint(address,uint256,address[],uint256[][])
+		ERC_5521.setNode(uint256,address[],uint256[][])
+Repository.verifyLicenses(address[],uint256[][]) (contracts/Repository.sol#87-131) has external calls inside a loop: hasValidLicense = licenseManager.hasLicense(developer,repositoryAddress,tokenId) (contracts/Repository.sol#119-123)
+	Calls stack containing the loop:
+		Repository.mintSoftware(string,address[],uint256[][])
+ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109) has external calls inside a loop: isSupports = targetContractInstance.supportsInterface(type()(TargetContract).interfaceId) (contracts/ERC_5521.sol#102)
+	Calls stack containing the loop:
+		Repository.mintSoftware(string,address[],uint256[][])
+		ERC_5521.safeMint(address,uint256,address[],uint256[][])
+		ERC_5521.setNode(uint256,address[],uint256[][])
+ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109) has external calls inside a loop: targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	Calls stack containing the loop:
+		Repository.mintSoftware(string,address[],uint256[][])
+		ERC_5521.safeMint(address,uint256,address[],uint256[][])
+		ERC_5521.setNode(uint256,address[],uint256[][])
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
+INFO:Detectors:
+Reentrancy in LicenseManager.mintLicense(address,address,uint256) (contracts/LicenseManager.sol#38-92):
+	External calls:
+	- safeMint(licensee,licenseId,refAddresses,refTokenIds) (contracts/LicenseManager.sol#75)
+		- retval = IERC721Receiver(to).onERC721Received(operator,from,tokenId,data) (node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#33-47)
+		- ERC721Utils.checkOnERC721Received(_msgSender(),address(0),to,tokenId,data) (node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol#315)
+		- targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	State variables written after the call(s):
+	- _setTokenURI(licenseId,licenseURI) (contracts/LicenseManager.sol#82)
+		- _tokenURIs[tokenId] = _tokenURI (node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol#58)
+	- licenseToRepository[licenseId] = repository (contracts/LicenseManager.sol#85)
+	- licenseToSoftware[licenseId] = softwareId (contracts/LicenseManager.sol#86)
+	- softwareToLicenses[repository][softwareId].push(licenseId) (contracts/LicenseManager.sol#87)
+Reentrancy in Repository.mintSoftware(string,address[],uint256[][]) (contracts/Repository.sol#63-85):
+	External calls:
+	- safeMint(developer,softwareCount,addresses,_tokenIds) (contracts/Repository.sol#80)
+		- ERC721Utils.checkOnERC721Received(_msgSender(),address(0),to,tokenId,data) (node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol#315)
+		- retval = IERC721Receiver(to).onERC721Received(operator,from,tokenId,data) (node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#33-47)
+		- targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	State variables written after the call(s):
+	- setTokenURI(developer,softwareCount,_tokenURI) (contracts/Repository.sol#81)
+		- _tokenURIs[tokenId] = _tokenURI (node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol#58)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-2
+INFO:Detectors:
+Reentrancy in Marketplace.buySoftware(address,uint256) (contracts/Marketplace.sol#112-150):
+	External calls:
+	- licenseId = registry.mintLicense(msg.sender,listings[repository][tokenId].developer,tokenId) (contracts/Marketplace.sol#131)
+	- royaltyManager.recordSale{value: msg.value}(developer,repository,tokenId,price) (contracts/Marketplace.sol#139-144)
+	External calls sending eth:
+	- royaltyManager.recordSale{value: msg.value}(developer,repository,tokenId,price) (contracts/Marketplace.sol#139-144)
+	Event emitted after the call(s):
+	- LicensePurchased(msg.sender,repository,tokenId,licenseId,price) (contracts/Marketplace.sol#147)
+Reentrancy in LicenseManager.mintLicense(address,address,uint256) (contracts/LicenseManager.sol#38-92):
+	External calls:
+	- safeMint(licensee,licenseId,refAddresses,refTokenIds) (contracts/LicenseManager.sol#75)
+		- retval = IERC721Receiver(to).onERC721Received(operator,from,tokenId,data) (node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#33-47)
+		- ERC721Utils.checkOnERC721Received(_msgSender(),address(0),to,tokenId,data) (node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol#315)
+		- targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	Event emitted after the call(s):
+	- LicenseCreated(licenseId,repository,softwareId,licensee) (contracts/LicenseManager.sol#89)
+	- MetadataUpdate(tokenId) (node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol#59)
+		- _setTokenURI(licenseId,licenseURI) (contracts/LicenseManager.sol#82)
+Reentrancy in Registry.mintLicense(address,address,uint256) (contracts/Registry.sol#97-110):
+	External calls:
+	- licenseId = LicenseManager(licenseManager).mintLicense(buyer,repositoryAddress,softwareId) (contracts/Registry.sol#106)
+	Event emitted after the call(s):
+	- LicenseMinted(buyer,repositoryAddress,softwareId,licenseId) (contracts/Registry.sol#108)
+Reentrancy in Registry.mintSoftware(string,address[],uint256[][]) (contracts/Registry.sol#80-90):
+	External calls:
+	- tokenId = Repository(repository).mintSoftware(_tokenURI,addresses,_tokenIds) (contracts/Registry.sol#86)
+	Event emitted after the call(s):
+	- SoftwareMinted(msg.sender,tokenId,_tokenURI) (contracts/Registry.sol#88)
+Reentrancy in Repository.mintSoftware(string,address[],uint256[][]) (contracts/Repository.sol#63-85):
+	External calls:
+	- safeMint(developer,softwareCount,addresses,_tokenIds) (contracts/Repository.sol#80)
+		- ERC721Utils.checkOnERC721Received(_msgSender(),address(0),to,tokenId,data) (node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol#315)
+		- retval = IERC721Receiver(to).onERC721Received(operator,from,tokenId,data) (node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#33-47)
+		- targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	Event emitted after the call(s):
+	- MetadataUpdate(tokenId) (node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol#59)
+		- setTokenURI(developer,softwareCount,_tokenURI) (contracts/Repository.sol#81)
+	- ReferenceCreated(softwareCount,addresses,_tokenIds) (contracts/Repository.sol#83)
+Reentrancy in ERC_5521.safeMint(address,uint256,address[],uint256[][]) (contracts/ERC_5521.sol#27-35):
+	External calls:
+	- _safeMint(to,tokenId) (contracts/ERC_5521.sol#30)
+		- retval = IERC721Receiver(to).onERC721Received(operator,from,tokenId,data) (node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#33-47)
+		- ERC721Utils.checkOnERC721Received(_msgSender(),address(0),to,tokenId,data) (node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol#315)
+	- setNode(tokenId,addresses,_tokenIds) (contracts/ERC_5521.sol#33)
+		- targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	Event emitted after the call(s):
+	- UpdateNode(tokenId,sender,_referringKeys,_referringValues,_referredKeys,_referredValues) (contracts/ERC_5521.sol#232)
+		- setNode(tokenId,addresses,_tokenIds) (contracts/ERC_5521.sol#33)
+Reentrancy in ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109):
+	External calls:
+	- targetContractInstance.setNodeReferredExternal(address(this),tokenId,_tokenIds[i]) (contracts/ERC_5521.sol#105)
+	Event emitted after the call(s):
+	- UpdateNode(tokenId,sender,_referringKeys,_referringValues,_referredKeys,_referredValues) (contracts/ERC_5521.sol#232)
+		- emitEvents(_tokenIds[i][j],ownerOf(_tokenIds[i][j])) (contracts/ERC_5521.sol#98)
+Reentrancy in RoyaltyManager.withdrawRoyalties() (contracts/RoyaltyManager.sol#69-81):
+	External calls:
+	- (success,None) = address(msg.sender).call{value: amount}() (contracts/RoyaltyManager.sol#77)
+	Event emitted after the call(s):
+	- RoyaltyWithdrawn(msg.sender,amount) (contracts/RoyaltyManager.sol#80)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3
+INFO:Detectors:
+ERC_5521.setNodeReferred(address[],uint256,uint256[][]) (contracts/ERC_5521.sol#83-109) uses timestamp for comparisons
+	Dangerous comparisons:
+	- relationship.createdTimestamp >= block.timestamp (contracts/ERC_5521.sol#93)
+ERC_5521.setNodeReferredExternal(address,uint256,uint256[]) (contracts/ERC_5521.sol#113-128) uses timestamp for comparisons
+	Dangerous comparisons:
+	- relationship.createdTimestamp >= block.timestamp (contracts/ERC_5521.sol#121)
+RoyaltyManager.recordSale(address,address,uint256,uint256) (contracts/RoyaltyManager.sol#43-66) uses timestamp for comparisons
+	Dangerous comparisons:
+	- publishTime == 0 (contracts/RoyaltyManager.sol#54)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+INFO:Detectors:
+ERC721Utils.checkOnERC721Received(address,address,address,uint256,bytes) (node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#25-49) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#43-45)
+Panic.panic(uint256) (node_modules/@openzeppelin/contracts/utils/Panic.sol#50-56) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Panic.sol#51-55)
+Strings.toString(uint256) (node_modules/@openzeppelin/contracts/utils/Strings.sol#45-63) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#50-52)
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#55-57)
+Strings.toChecksumHexString(address) (node_modules/@openzeppelin/contracts/utils/Strings.sol#111-129) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#116-118)
+Strings.escapeJSON(string) (node_modules/@openzeppelin/contracts/utils/Strings.sol#446-476) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#470-473)
+Strings._unsafeReadBytesOffset(bytes,uint256) (node_modules/@openzeppelin/contracts/utils/Strings.sol#484-489) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#486-488)
+Math.add512(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#25-30) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#26-29)
+Math.mul512(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#37-46) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#41-45)
+Math.tryMul(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#73-84) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#76-80)
+Math.tryDiv(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#89-97) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#92-95)
+Math.tryMod(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#102-110) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#105-108)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#227-234)
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#240-249)
+Math.tryModExp(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#409-433) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#411-432)
+Math.tryModExp(bytes,bytes,bytes) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#449-471) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#461-470)
+Math.log2(uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#612-651) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#648-650)
+SafeCast.toUint(bool) (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#1157-1161) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#1158-1160)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
+INFO:Detectors:
+2 different versions of Solidity are used:
+	- Version constraint ^0.8.20 is used by:
+		-^0.8.20 (node_modules/@openzeppelin/contracts/interfaces/IERC165.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/interfaces/IERC4906.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/interfaces/IERC721.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol#3)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Context.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Panic.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Strings.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#5)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#4)
+	- Version constraint ^0.8.4 is used by:
+		-^0.8.4 (contracts/ERC_5521.sol#2)
+		-^0.8.4 (contracts/IERC_5521.sol#2)
+		-^0.8.4 (contracts/LicenseManager.sol#2)
+		-^0.8.4 (contracts/Marketplace.sol#2)
+		-^0.8.4 (contracts/Registry.sol#2)
+		-^0.8.4 (contracts/Repository.sol#2)
+		-^0.8.4 (contracts/RoyaltyManager.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#different-pragma-directives-are-used
+INFO:Detectors:
+Version constraint ^0.8.20 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- VerbatimInvalidDeduplication
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess.
+It is used by:
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/interfaces/IERC165.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/interfaces/IERC4906.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/interfaces/IERC721.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol#3)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/Context.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/Panic.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/Strings.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#5)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#4)
+Version constraint ^0.8.4 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables.
+It is used by:
+	- ^0.8.4 (contracts/ERC_5521.sol#2)
+	- ^0.8.4 (contracts/IERC_5521.sol#2)
+	- ^0.8.4 (contracts/LicenseManager.sol#2)
+	- ^0.8.4 (contracts/Marketplace.sol#2)
+	- ^0.8.4 (contracts/Registry.sol#2)
+	- ^0.8.4 (contracts/Repository.sol#2)
+	- ^0.8.4 (contracts/RoyaltyManager.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+INFO:Detectors:
+Low level call in RoyaltyManager.withdrawRoyalties() (contracts/RoyaltyManager.sol#69-81):
+	- (success,None) = address(msg.sender).call{value: amount}() (contracts/RoyaltyManager.sol#77)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+INFO:Detectors:
+LicenseManager (contracts/LicenseManager.sol#9-146) should inherit from ILicenseManager (contracts/Repository.sol#9-15)
+RoyaltyManager (contracts/RoyaltyManager.sol#8-108) should inherit from IRoyaltyManager (contracts/Marketplace.sol#6-13)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-inheritance
+INFO:Detectors:
+Contract ERC_5521 (contracts/ERC_5521.sol#8-268) is not in CapWords
+Parameter ERC_5521.safeMint(address,uint256,address[],uint256[][])._tokenIds (contracts/ERC_5521.sol#27) is not in mixedCase
+Parameter ERC_5521.setTokenURI(address,uint256,string)._tokenURI (contracts/ERC_5521.sol#40) is not in mixedCase
+Parameter ERC_5521.setNodeReferring(address[],uint256,uint256[][])._tokenIds (contracts/ERC_5521.sol#65) is not in mixedCase
+Parameter ERC_5521.setNodeReferred(address[],uint256,uint256[][])._tokenIds (contracts/ERC_5521.sol#83) is not in mixedCase
+Parameter ERC_5521.setNodeReferredExternal(address,uint256,uint256[])._address (contracts/ERC_5521.sol#113) is not in mixedCase
+Parameter ERC_5521.setNodeReferredExternal(address,uint256,uint256[])._tokenIds (contracts/ERC_5521.sol#113) is not in mixedCase
+Parameter ERC_5521.referringOf(address,uint256)._address (contracts/ERC_5521.sol#133) is not in mixedCase
+Parameter ERC_5521.referredOf(address,uint256)._address (contracts/ERC_5521.sol#160) is not in mixedCase
+Parameter ERC_5521.createdTimestampOf(address,uint256)._address (contracts/ERC_5521.sol#187) is not in mixedCase
+Contract IERC_5521 (contracts/IERC_5521.sol#6-44) is not in CapWords
+Parameter Registry.setMarketplace(address)._marketplace (contracts/Registry.sol#45) is not in mixedCase
+Parameter Registry.mintSoftware(string,address[],uint256[][])._tokenURI (contracts/Registry.sol#80) is not in mixedCase
+Parameter Registry.mintSoftware(string,address[],uint256[][])._tokenIds (contracts/Registry.sol#80) is not in mixedCase
+Parameter Registry.isRepository(address)._repositoryAddress (contracts/Registry.sol#116) is not in mixedCase
+Parameter Registry.isDeveloper(address)._sender (contracts/Registry.sol#120) is not in mixedCase
+Parameter Registry.getRepositoryContract(address)._sender (contracts/Registry.sol#124) is not in mixedCase
+Parameter Registry.repositoryOwnsSoftware(address,uint256)._repository (contracts/Registry.sol#129) is not in mixedCase
+Parameter Registry.repositoryOwnsSoftware(address,uint256)._tokenId (contracts/Registry.sol#129) is not in mixedCase
+Parameter Repository.mintSoftware(string,address[],uint256[][])._tokenURI (contracts/Repository.sol#64) is not in mixedCase
+Parameter Repository.mintSoftware(string,address[],uint256[][])._tokenIds (contracts/Repository.sol#66) is not in mixedCase
+Parameter RoyaltyManager.updateRoyaltyParameters(uint256,uint256,uint256)._initialRate (contracts/RoyaltyManager.sol#86) is not in mixedCase
+Parameter RoyaltyManager.updateRoyaltyParameters(uint256,uint256,uint256)._decayFactor (contracts/RoyaltyManager.sol#87) is not in mixedCase
+Parameter RoyaltyManager.updateRoyaltyParameters(uint256,uint256,uint256)._decayPeriod (contracts/RoyaltyManager.sol#88) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Detectors:
+Math.log2(uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#612-651) uses literals with too many digits:
+	- r = r | byte(uint256,uint256)(x >> r,0x0000010102020202030303030303030300000000000000000000000000000000) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#649)
+LicenseManager.slitherConstructorVariables() (contracts/LicenseManager.sol#9-146) uses literals with too many digits:
+	- licenseCounter = 1000000 (contracts/LicenseManager.sol#11)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#too-many-digits
+INFO:Detectors:
+LicenseManager (contracts/LicenseManager.sol#9-146) does not implement functions:
+	- TargetContract.supportsInterface(bytes4) (contracts/IERC_5521.sol#59)
+Repository (contracts/Repository.sol#21-168) does not implement functions:
+	- TargetContract.supportsInterface(bytes4) (contracts/IERC_5521.sol#59)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unimplemented-functions
+INFO:Detectors:
+ERC_5521.contractOwner (contracts/ERC_5521.sol#21) should be immutable
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-immutable
+INFO:Slither:../ analyzed (30 contracts with 100 detectors), 90 result(s) found

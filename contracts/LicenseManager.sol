@@ -45,7 +45,7 @@ contract LicenseManager is ERC_5521 {
 
         // Check if repository contract exists by calling a function on it
         Repository repo = Repository(repository);
-        try repo.getDeveloper() returns (address) {
+        try repo.getDeveloper() {
             // Repository exists, continue
         } catch {
             revert RepositoryNotFound();
