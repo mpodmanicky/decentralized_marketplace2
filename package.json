@@ -9,5 +9,8 @@
     "ethers": "^5.8.0",
     "hardhat": "^2.23.0",
     "hardhat-gas-reporter": "^2.2.3"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.7"
   }
 }
