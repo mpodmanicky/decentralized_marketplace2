@@ -254,4 +254,107 @@ describe("Decentralized Marketplace", function () {
     expect(withdrawEvents.length).to.equal(1);
     expect(withdrawEvents[0].args.amount).to.equal(updatedPendingRoyalties);
   });
+  it("Should allow for more complex royalty distribution metadata tracking", async function() {
+    // Get the RoyaltyManager from the Registry
+    const RoyaltyManager = await ethers.getContractFactory("RoyaltyManager");
+    const royaltyManagerAddress = await registry.getRoyaltyManager();
+    const royaltyManager = await RoyaltyManager.attach(royaltyManagerAddress);
+
+    // List dev1's software with dependency (token ID 2) on the marketplace
+    const listingPrice = ethers.utils.parseEther("3"); // 3 ETH
+    await marketplace.connect(dev1).listSoftware(2, listingPrice);
+
+    // Verify the software is listed
+    expect(await marketplace.checkIsListed(dev1Repository, 2)).to.equal(true);
+    console.log("Dev1's software with dependency is now listed for", ethers.utils.formatEther(listingPrice), "ETH");
+
+    // Buyer purchases dev1's software that depends on dev2's software
+    const purchaseTx = await marketplace.connect(buyer).buySoftware(dev1Repository, 2, {
+      value: listingPrice
+    });
+    const purchaseReceipt = await purchaseTx.wait();
+
+    // Extract the licenseId from the event
+    const licenseId = purchaseReceipt.events.find(e => e.event === "LicensePurchased").args.licenseId;
+    console.log("Buyer received license ID:", licenseId.toString(), "for dev1's software with dependency");
+
+    // Verify license ownership
+    expect(await licenseManager.ownerOf(licenseId)).to.equal(buyer.address);
+
+    // Check for SaleMade event which the indexer would use for off-chain calculations
+    const saleEvents = await royaltyManager.queryFilter(
+      royaltyManager.filters.SaleMade(),
+      purchaseReceipt.blockNumber,
+      purchaseReceipt.blockNumber
+    );
+
+    console.log("Sale events emitted:", saleEvents.length);
+    expect(saleEvents.length).to.be.at.least(1);
+
+    // Verify the SaleMade event has all necessary data for the indexer
+    const saleEvent = saleEvents.find(e => e.args.repository === dev1Repository && e.args.softwareId.toString() === "2");
+    expect(saleEvent).to.not.be.undefined;
+
+    console.log("Sale event details:");
+    console.log("- Repository:", saleEvent.args.repository);
+    console.log("- Software ID:", saleEvent.args.softwareId.toString());
+    console.log("- Price:", ethers.utils.formatEther(saleEvent.args.price));
+    console.log("- Timestamp:", saleEvent.args.timestamp.toString());
+
+    // Verify the sale price matches the listing price
+    expect(saleEvent.args.price).to.equal(listingPrice);
+
+    // Verify publish time is recorded for software dependency calculation
+    const dev1SoftwarePublishTime = await royaltyManager.softwarePublishTime(dev1Repository, 2);
+    const dev2SoftwarePublishTime = await royaltyManager.softwarePublishTime(dev2Repository, 1);
+
+    console.log("Dev1 software publish time:", dev1SoftwarePublishTime.toString());
+    console.log("Dev2 software publish time:", dev2SoftwarePublishTime.toString());
+
+    // Dev2's software should have been published before Dev1's
+    expect(dev2SoftwarePublishTime).to.be.lt(dev1SoftwarePublishTime);
+
+    // Check for SoftwarePublished events - should have been emitted when software was published
+    const publishEvents = await royaltyManager.queryFilter(
+      royaltyManager.filters.SoftwarePublished()
+    );
+
+    const dev1PublishEvent = publishEvents.find(
+      e => e.args.repository === dev1Repository && e.args.softwareId.toString() === "2"
+    );
+    const dev2PublishEvent = publishEvents.find(
+      e => e.args.repository === dev2Repository && e.args.softwareId.toString() === "1"
+    );
+
+    expect(dev1PublishEvent).to.not.be.undefined;
+    expect(dev2PublishEvent).to.not.be.undefined;
+
+    console.log("Dev1 software publish event timestamp:", dev1PublishEvent.args.publishTime.toString());
+    console.log("Dev2 software publish event timestamp:", dev2PublishEvent.args.publishTime.toString());
+
+    // Check that RoyaltyParametersUpdated event was emitted (usually in constructor)
+    // This provides the indexer with calculation parameters
+    const paramEvents = await royaltyManager.queryFilter(
+      royaltyManager.filters.RoyaltyParametersUpdated()
+    );
+
+    expect(paramEvents.length).to.be.at.least(1);
+    const latestParamEvent = paramEvents[paramEvents.length - 1];
+
+    console.log("Royalty parameters from event:");
+    console.log("- Initial rate:", latestParamEvent.args.initialRate.toString());
+    console.log("- Decay factor:", latestParamEvent.args.decayFactor.toString());
+    console.log("- Decay period:", latestParamEvent.args.decayPeriod.toString());
+
+    // Verify the proper dependency data is available for the indexer
+    const dev1Repo = await Repository.attach(dev1Repository);
+    const [dependencies, depTokenIds] = await dev1Repo.getSoftwareDependencies(2);
+
+    console.log("Dependencies available to indexer:");
+    for (let i = 0; i < dependencies.length; i++) {
+      console.log(`- Repository: ${dependencies[i]}, Token IDs: ${depTokenIds[i]}`);
+      expect(dependencies[i]).to.equal(dev2Repository);
+      expect(depTokenIds[i][0]).to.equal(1);
+    }
+  });
 });
