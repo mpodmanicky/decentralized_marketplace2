@@ -45,20 +45,6 @@ async function main() {
   console.log('Buyer2:', buyer2.address);
   console.log('Buyer3:', buyer3.address);
 
-  // Function to verify ERC-5521 compatibility
-  async function verifyERC5521Support(repo) {
-    try {
-      const repoERC5521 = await ERC5521.attach(repo);
-      // Check if contract supports ERC-5521 interface
-      const supportsInterface = await repoERC5521.supportsInterface('0x4179b1ee');
-      console.log(`Repository ${repo} ERC-5521 support: ${supportsInterface ? 'YES ✓' : 'NO ✗'}`);
-      return supportsInterface;
-    } catch (error) {
-      console.error(`Error verifying ERC-5521 support:`, error.message);
-      return false;
-    }
-  }
-
   // Function to verify relationship in ERC-5521 DAG
   async function verifyReferringRelationship(fromRepo, fromId, toRepo, toId) {
     try {
@@ -116,12 +102,6 @@ async function main() {
       dev3Repository = addresses.dev3Repository;
       console.log('Using existing dev3 repository:', dev3Repository);
     }
-
-    // Verify ERC-5521 support for all repositories
-    console.log('\n=== Verifying ERC-5521 Support ===');
-    await verifyERC5521Support(addresses.dev1Repository);
-    await verifyERC5521Support(addresses.dev2Repository);
-    await verifyERC5521Support(dev3Repository);
   } catch (error) {
     console.error('Error setting up repositories:', error.message);
   }
