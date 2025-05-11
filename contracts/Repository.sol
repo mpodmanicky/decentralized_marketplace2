@@ -27,7 +27,7 @@ contract Repository is ERC_5521 {
         address creator;
         string tokenURI;
         address[] deps;
-        uint256[][] depTokenIds;
+        uint256[][] depTokenIds; // for quick dependency look up, it is not needed thanks to ERC-5521 referredOf and referringOf functions
     }
 
     mapping(uint256 => SoftwareMeta) public softwareMeta; // tokenId => SoftwareMeta

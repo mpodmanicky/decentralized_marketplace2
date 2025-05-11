@@ -39,7 +39,7 @@ module.exports = {
     outputFile: 'gas-report.txt',
     noColors: true,
     coinmarketcap: "527ad7d1-8253-4148-8f69-0fb92fe0e040",
-    gasPrice: 21,
+    gasPrice: 2.95,
   }
 
 };

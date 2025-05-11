@@ -89,8 +89,13 @@
       <div id="parameters-content">
         <p>Loading...</p>
       </div>
+      <div id="decay-chart" style="height: 300px; margin-top: 20px;">
+        <!-- Decay visualization will go here -->
+      </div>
     </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
     // Tab switching
@@ -185,18 +190,37 @@
         const response = await fetch('/api/parameters');
         const params = await response.json();
 
+        // Normalize parameter names
+        const initialRate = params.initial_rate || params.initialRate || 10;
+        const decayFactor = params.decay_factor || params.decayFactor || 65;
+        const decayPeriod = params.decay_period || params.decayPeriod || 30 * 24 * 60 * 60;
+
         document.getElementById('parameters-content').innerHTML = `
-          <p><strong>Initial Rate:</strong> ${params.initial_rate || params.initialRate}%</p>
-          <p><strong>Decay Factor:</strong> ${params.decay_factor || params.decayFactor}%</p>
-          <p><strong>Decay Period:</strong> ${params.decay_period || params.decayPeriod} seconds
-            (${Math.round((params.decay_period || params.decayPeriod) / (24 * 60 * 60))} days)</p>
+          <h3>Current Parameters</h3>
+          <p><strong>Initial Rate:</strong> ${initialRate}%</p>
+          <p><strong>Decay Factor:</strong> ${decayFactor}% (${100-decayFactor}% reduction per level)</p>
+          <p><strong>Maximum Depth:</strong> 5 levels in dependency tree</p>
+
+          <h3>Exponential Decay Model</h3>
+          <p>Royalty Rate = Initial Rate × (Decay Factor/100)<sup>depth</sup></p>
+          <p>Example calculations:</p>
+          <ul>
+            <li>Direct author (depth 0): ${initialRate}% of sale price</li>
+            <li>Level 1 dependency: ${(initialRate * decayFactor / 100).toFixed(2)}% of sale price</li>
+            <li>Level 2 dependency: ${(initialRate * Math.pow(decayFactor/100, 2)).toFixed(2)}% of sale price</li>
+            <li>Level 3 dependency: ${(initialRate * Math.pow(decayFactor/100, 3)).toFixed(2)}% of sale price</li>
+            <li>Level 4 dependency: ${(initialRate * Math.pow(decayFactor/100, 4)).toFixed(2)}% of sale price</li>
+            <li>Level 5 dependency: ${(initialRate * Math.pow(decayFactor/100, 5)).toFixed(2)}% of sale price</li>
+          </ul>
         `;
+
+        // Create decay visualization
+        renderDecayChart(initialRate, decayFactor);
       } catch (error) {
         console.error('Error loading parameters:', error);
       }
     }
 
-    // Check royalties
     document.getElementById('check-royalties').addEventListener('click', async () => {
       const developerAddress = document.getElementById('developer-address').value.trim();
 
@@ -206,47 +230,115 @@
       }
 
       try {
-        const response = await fetch(`/api/royalties/${developerAddress}`);
+        // First try the enhanced dependency royalty endpoint
+        const response = await fetch(`/api/royalties/dependency/${developerAddress}`);
         const data = await response.json();
 
         let html = `
           <h3>Pending Royalties</h3>
           <p>${formatEth(data.pending)} ETH</p>
 
-          <h3>Sales History</h3>
+          <h3>Royalty Breakdown by Dependency Level</h3>
         `;
 
-        if (data.sales && data.sales.length > 0) {
-          html += `
-            <table>
-              <thead>
-                <tr>
-                  <th>Software ID</th>
-                  <th>Price (ETH)</th>
-                  <th>Royalty (ETH)</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-          `;
-
-          data.sales.forEach(sale => {
-            html += `
-              <tr>
-                <td>${sale.software_id}</td>
-                <td>${formatEth(sale.price)}</td>
-                <td>${sale.royalty_amount ? formatEth(sale.royalty_amount) : 'Calculating...'}</td>
-                <td>${formatTimestamp(sale.timestamp)}</td>
-              </tr>
-            `;
+        if (data.royalties && data.royalties.length > 0) {
+          // Group royalties by sale
+          const salesMap = {};
+          data.royalties.forEach(r => {
+            if (!salesMap[r.sale_id]) {
+              salesMap[r.sale_id] = {
+                saleId: r.sale_id,
+                saleTime: r.sale_time,
+                salePrice: r.sale_price,
+                royalties: []
+              };
+            }
+            salesMap[r.sale_id].royalties.push(r);
           });
 
-          html += `
-              </tbody>
-            </table>
-          `;
+          // Convert to array and sort by time
+          const sales = Object.values(salesMap).sort((a, b) => b.saleTime - a.saleTime);
+
+          for (const sale of sales) {
+            html += `
+              <div class="card" style="margin-top: 15px; background: #f7f7f7;">
+                <h4>Sale at ${formatTimestamp(sale.saleTime)}</h4>
+                <p>Sale Price: ${formatEth(sale.salePrice)} ETH</p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Software</th>
+                      <th>Depth</th>
+                      <th>Rate</th>
+                      <th>Amount (ETH)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+            `;
+
+            // Sort royalties by depth
+            sale.royalties.sort((a, b) => a.depth - b.depth);
+
+            for (const royalty of sale.royalties) {
+              html += `
+                <tr>
+                  <td>${formatAddress(royalty.repository)}-${royalty.software_id}</td>
+                  <td>${royalty.depth} ${royalty.depth === 0 ? '(primary author)' : ''}</td>
+                  <td>${royalty.rate.toFixed(2)}%</td>
+                  <td>${formatEth(royalty.amount)}</td>
+                </tr>
+              `;
+            }
+
+            html += `
+                  </tbody>
+                </table>
+              </div>
+            `;
+          }
+
+          // Add decay curve visualization if we have the data
+          if (data.decayCurve) {
+            html += `
+              <h3>Current Royalty Decay Model</h3>
+              <p>The following chart shows how royalty rates decrease with dependency depth:</p>
+              <div style="height: 250px; margin-top: 15px;">
+                <canvas id="royalty-decay-chart"></canvas>
+              </div>
+            `;
+
+            setTimeout(() => {
+              const ctx = document.getElementById('royalty-decay-chart');
+              new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: data.decayCurve.map(d => `Depth ${d.depth}`),
+                  datasets: [{
+                    label: 'Royalty Rate (%)',
+                    data: data.decayCurve.map(d => d.rate),
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    fill: true
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      title: {
+                        display: true,
+                        text: 'Rate (%)'
+                      }
+                    }
+                  }
+                }
+              });
+            }, 100);
+          }
         } else {
-          html += '<p>No sales recorded for this developer</p>';
+          html += '<p>No royalty data found for this developer</p>';
         }
 
         document.getElementById('royalty-result').innerHTML = html;
@@ -255,6 +347,67 @@
         document.getElementById('royalty-result').innerHTML = '<p>Error checking royalties. Please try again.</p>';
       }
     });
+
+    function renderDecayChart(initialRate, decayFactor) {
+      const ctx = document.getElementById('decay-chart');
+
+      // Calculate rates for each depth level
+      const depths = [0, 1, 2, 3, 4, 5];
+      const rates = depths.map(depth => {
+        return initialRate * Math.pow(decayFactor/100, depth);
+      });
+
+      // If there's an existing chart, destroy it
+      if (window.decayChart) {
+        window.decayChart.destroy();
+      }
+
+      // Create new chart
+      window.decayChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: depths.map(d => `Depth ${d}`),
+          datasets: [{
+            label: 'Royalty Rate (%)',
+            data: rates,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Royalty Percentage'
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Dependency Depth'
+              }
+            }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: 'Exponential Decay of Royalty Rates by Dependency Depth'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `Royalty: ${context.parsed.y.toFixed(2)}%`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
 
     // Initial loads
     loadSales();
